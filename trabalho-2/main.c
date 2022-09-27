@@ -8,7 +8,6 @@ typedef struct no{
 
 typedef struct{
   No *topo;
-  int tam;
 }Pilha;
 
 void criar_pilha(Pilha *p){
@@ -33,7 +32,6 @@ No* desempilhar(Pilha *p){
   if(p->topo){
     No *remover = p->topo;
     p->topo = remover->proximo;
-    p->tam--;
     return remover;
   }
 
@@ -41,7 +39,7 @@ No* desempilhar(Pilha *p){
 }
 
 void imprimir(char p){
-  printf("%c", p);
+  printf("%c\n", p);
 }
 
 void imprimir_pilha(Pilha *p){
@@ -58,12 +56,17 @@ void main(){
     Pilha p;
     char letra, temp;
     int numberOpen, numberClosed, tempOpen, tempClosed;
+    numberClosed = 0;
+    numberOpen = 0;
+    tempClosed = 0;
+    tempOpen = 0;
 
     criar_pilha(&p);
 
     printf("Digite sua expressão: (letra por letra)\n");
     do{
         scanf("%c", &letra);
+        fflush(stdin);
 
         if(letra == 'x'){
             break;
@@ -80,6 +83,12 @@ void main(){
     if(remover->p == '('){
         printf("Condição violada\n");
         free(remover);
+        remover = desempilhar(&p);
+        while(remover){
+          free(remover);
+          remover = desempilhar(&p);
+        }        
+        getchar();
         return;
     }
 
@@ -98,6 +107,12 @@ void main(){
             if(tempOpen == 1 && tempClosed == 0){
                 printf("\nCondição violada\n");
                 free(remover);
+                remover = desempilhar(&p);
+                 while(remover){
+                    free(remover);
+                    remover = desempilhar(&p);
+                 }
+                getchar();
                 return;
             }
             
@@ -107,18 +122,22 @@ void main(){
     }
     else{
         printf("\nVocê não digitou nada\n");
+        getchar();
         return;
     }
 
     if(numberClosed != numberOpen){
         printf("\nCondição violada\n");
+        free(remover);
+        getchar();
         return;
     }
 
     
     printf("\nPassou nas condições\n");
 
-
+    printf("Pressione qualquer tecla para continuar");
+    getchar();
     return;
 
 
